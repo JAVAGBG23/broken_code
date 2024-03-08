@@ -18,17 +18,23 @@ exports.listAllCourses = async (req, res) => {
 };
 
 exports.update = async (req, res) => {
-  const course = req.course;
-  course.name = req.body.name;
-  course.category = req.body.category;
-  await course.save((err, data) => {
-    if (err) {
-      return res.status(400).json({
-        message: "Error updating course",
-      });
+  try {
+    const { id } = req.params;
+    const course = await Course.findOne({ id }).exec();
+
+    if (course) {
+      return res.status(400).send("Course not found");
+    } else {
+      const updated = await Course.findOneAndUpdate({ id }, req.body, {
+        new: true,
+      }).exec();
+
+      res.json(updated);
     }
-    res.json(data);
-  });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send(err.message);
+  }
 };
 
 exports.singleCourse = async (req, res) => {

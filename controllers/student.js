@@ -13,7 +13,7 @@ exports.create = async (req, res) => {
 };
 
 exports.listAllStudents = async (req, res) => {
-  const allStudents = await Student.find({}).sort({ createdAt: -1 }).exec();
+  const allStudents = await Student.find({}).exec();
   res.json(allStudents);
 };
 
